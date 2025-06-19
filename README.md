@@ -2,6 +2,9 @@
 
 A Python script that monitors StreetEasy apartment listings and sends email notifications when new apartments matching your criteria are found.
 
+<img width="1030" alt="image" src="https://github.com/user-attachments/assets/1c82b3e6-d36c-4b90-877d-7d448cb07566" />
+
+
 ## Features
 - **Automated monitoring**: Runs every 5 minutes to check for new listings (configurable)
 - **Email notifications**: Beautiful HTML emails with apartment images and details
