@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  apartment-tracker:
+    build: .
+    container_name: apartment-tracker
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    env_file:
+      - .env 

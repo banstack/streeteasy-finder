@@ -19,7 +19,39 @@ A Python script that monitors StreetEasy apartment listings and sends email noti
 
 ## Setup Instructions
 
-### 1. Clone and Install Dependencies
+### Option 1: Docker Setup (Recommended) 🐳
+
+The easiest way to run the apartment tracker with consistent environment:
+
+```bash
+# 1. Copy environment template
+cp .env.example .env
+
+# 2. Edit with your settings
+nano .env
+
+# 3. Build and run with Docker
+./run.sh build
+./run.sh run
+```
+
+**Docker Commands:**
+```bash
+./run.sh build    # Build the Docker image
+./run.sh run      # Start the apartment tracker
+./run.sh logs     # View logs
+./run.sh stop     # Stop the tracker
+./run.sh restart  # Restart the tracker
+./run.sh clean    # Clean up containers
+```
+
+**Benefits:**
+- ✅ No Python environment setup needed
+- ✅ Consistent environment across all systems
+- ✅ Persistent data storage (`./data/` and `./logs/`)
+- ✅ Easy start/stop management
+
+### Option 2: Local Python Setup
 
 ```bash
 git clone <your-repo-url>
@@ -27,7 +59,7 @@ cd apartment-tracker
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment Variables
+### Configure Environment Variables
 
 ```bash
 # Copy the example environment file
@@ -37,7 +69,7 @@ cp .env.example .env
 nano .env  # or use your preferred editor
 ```
 
-### 3. Gmail Setup (Recommended)
+### Gmail Setup (Recommended)
 
 For Gmail, you need to set up an App Password:
 
@@ -54,7 +86,7 @@ For Gmail, you need to set up an App Password:
    TO_EMAIL=your_email@gmail.com
    ```
 
-### 4. Customize Your Search
+### Customize Your Search
 
 Update the `SE_URL` in your `.env` file with your StreetEasy search criteria:
 
@@ -66,19 +98,27 @@ SE_URL=https://streeteasy.com/for-rent/nyc/price:-3000|beds%3C=1|area:106
 SE_URL=https://streeteasy.com/for-rent/brooklyn/price:-4000|beds:2
 ```
 
-### 5. Run the Tracker
+### Run the Tracker
 
+**With Docker (Recommended):**
+```bash
+./run.sh run    # Starts in background
+./run.sh logs   # View what's happening
+```
+
+**With Local Python:**
 ```bash
 python apartment_tracker.py
 ```
 
-The script will:
+The tracker will:
 - Check for new listings immediately
-- Continue checking every 5 minutes
+- Continue checking every 5 minutes (configurable)
 - Send email notifications for new apartments
-- Store listings in `apartments.db` to prevent duplicates
+- Store listings in database to prevent duplicates
 
-Press `Ctrl+C` to stop.
+**Docker**: Runs in background, use `./run.sh stop` to stop  
+**Local**: Press `Ctrl+C` to stop
 
 ## Configuration Options
 
@@ -122,6 +162,21 @@ sqlite3 apartments.db "SELECT COUNT(*) as count, price FROM apartments GROUP BY 
 
 ## Troubleshooting
 
+### Docker Issues
+```bash
+# View what's happening
+./run.sh logs
+
+# Restart if something goes wrong
+./run.sh restart
+
+# Clean slate (rebuild everything)
+./run.sh stop
+./run.sh clean
+./run.sh build
+./run.sh run
+```
+
 ### Email Issues
 - Ensure 2FA is enabled and App Password is generated
 - Check email credentials in `.env` file
@@ -133,6 +188,14 @@ sqlite3 apartments.db "SELECT COUNT(*) as count, price FROM apartments GROUP BY 
 - Rate limiting (script includes retry logic)
 
 ### Database Issues
+**Docker:**
+```bash
+# Reset database (deletes all stored listings)
+rm -rf data/
+./run.sh restart
+```
+
+**Local Python:**
 ```bash
 # Reset database (deletes all stored listings)
 rm apartments.db
